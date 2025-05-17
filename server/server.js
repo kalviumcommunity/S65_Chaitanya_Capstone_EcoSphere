@@ -1,5 +1,8 @@
 const express = require('express')
 const app = express()
+const userRoute = require('./routes/userRouter')
+
+app.use("/api", userRoute)
 
 app.get("/", (req, res) => {
     try {
