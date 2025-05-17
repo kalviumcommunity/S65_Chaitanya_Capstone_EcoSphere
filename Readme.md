@@ -1,6 +1,7 @@
 ## 🚀 Live Demo
 
-[Click here to view the deployed site](https://client-alpha-beige.vercel.app)
+[Click here to view the frontend deployed site](https://client-alpha-beige.vercel.app)
+[Click here to view the deployed server site](https://s65-chaitanya-capstone-ecosphere.onrender.com)
 
 # 🌱 EcoSpera
 
@@ -40,7 +41,7 @@
 ### 🔩 Backend
 - **Node.js** with **Express.js**
 - **MongoDB** with **Mongoose**
-- **JWT** – Secure user authentication
+- **JWT** –  Secure user authentication
 
 ### 🔐 Authentication
 - **JWT (JSON Web Token)** – Secure API access
