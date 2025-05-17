@@ -1,3 +1,7 @@
+## 🚀 Live Demo
+
+[Click here to view the deployed site](https://client-alpha-beige.vercel.app)
+
 # 🌱 EcoSpera
 
 **EcoSpera** is a sustainability-focused platform designed to promote recycling, responsible waste management, and environmentally friendly practices. By educating users and encouraging community collaboration, EcoSpera empowers individuals and communities to contribute to a cleaner, greener planet.
