@@ -24,4 +24,20 @@ const addUser = (req, res) => {
     }
 }
 
-module.exports = {getUsers, addUser}
+const updateUser = (req, res) => {
+    try {
+    const {email} = req.params
+    const {username, password} = req.body
+    const findIndex = users.findIndex((user) => user.email === email)
+    if (findIndex != -1) {
+        const updateUser = { username, email, password }
+        users[findIndex] = updateUser
+        return res.status(200).json({message: "User Updated Successfully..."})
+    }
+    return res.status(400).json({message: "User Not Found!"})
+    } catch (err) {
+        return res.status(500).json({error: err.message})
+    }
+}
+
+module.exports = {getUsers, addUser, updateUser}
