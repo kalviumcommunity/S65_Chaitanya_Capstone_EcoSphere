@@ -1,7 +1,11 @@
 const express = require('express')
-const app = express()
-app.use(express.json())
+const dotenv = require('dotenv')
 const userRoute = require('./routes/userRouter')
+const connectDB = require('./config/db')
+
+const app = express()
+dotenv.config()
+app.use(express.json())
 
 app.use("/api", userRoute)
 
@@ -13,10 +17,11 @@ app.get("/", (req, res) => {
     }
 })
 
-const PORT = 4000
+const PORT = process.env.PORT || 4000
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     try {
+        await connectDB()
         console.log(`Server is listening on http://localhost:${PORT}`)
     } catch (err) {
         console.error(err.message)
