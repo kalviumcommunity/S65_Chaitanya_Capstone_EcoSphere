@@ -1,40 +1,51 @@
-const users = require('../mockData')
+const User = require('../models/userModel')
 
-const getUsers = (req, res) => {
+const getUsers = async (req, res) => {
     try {
+        const users = await User.findOne()
+        if (!users) {
+            return res.status(400).json({message: "No users found!"})
+        }
         return res.status(200).json({userDetails: users})
     } catch (err) {
         return res.status(500).json({error: err.message})
     }
 }
 
-const addUser = (req, res) => {
+const addUser = async (req, res) => {
     try {
         const {username, email, password} = req.body
-        const newUser = {
+
+        if (!username || !email || !password) {
+            return res.status(400).json({message: "All fields are required!"})
+        }
+        const newUser = new User({
             username,
             email,
             password
-        }
-        users.push(newUser)
-        return res.status(201).json({message: "User Created Successfully..."})
+        })
+
+        await newUser.save()
+        return res.status(201).json({message: "User Created Successfully...", userDetails: newUser})
         
     } catch (err) {
         return res.status(500).json({error: err.message})
     }
 }
 
-const updateUser = (req, res) => {
+const updateUser = async (req, res) => {
     try {
-    const {email} = req.params
-    const {username, password} = req.body
-    const findIndex = users.findIndex((user) => user.email === email)
-    if (findIndex != -1) {
-        const updateUser = { username, email, password }
-        users[findIndex] = updateUser
-        return res.status(200).json({message: "User Updated Successfully..."})
-    }
-    return res.status(400).json({message: "User Not Found!"})
+        const {_id} = req.params
+
+        const existingUser = await User.findOne({_id})
+
+        if (!existingUser) {
+            return res.status(400).json({message: "Not a valid user!"})
+        }
+        
+        const updatedUser = await User.findByIdAndUpdate(_id, req.body, {new: true})
+        return res.status(200).json({message: "User Updation Successfull...", userDetails: updatedUser})
+
     } catch (err) {
         return res.status(500).json({error: err.message})
     }
