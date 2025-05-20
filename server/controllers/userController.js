@@ -2,7 +2,7 @@ const User = require('../models/userModel')
 
 const getUsers = async (req, res) => {
     try {
-        const users = await User.findOne()
+        const users = await User.find()
         if (!users) {
             return res.status(400).json({message: "No users found!"})
         }
