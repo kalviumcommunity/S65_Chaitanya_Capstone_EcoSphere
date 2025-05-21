@@ -2,11 +2,13 @@ const express = require('express')
 const dotenv = require('dotenv')
 const userRoute = require('./routes/userRouter')
 const connectDB = require('./config/db')
+const cookieParser = require('cookie-parser')
 const uploadRoute = require('./routes/upload')
 
 const app = express()
 dotenv.config()
 app.use(express.json())
+app.use(cookieParser())
 
 app.use("/api", userRoute)
 app.use("/v1", uploadRoute)
