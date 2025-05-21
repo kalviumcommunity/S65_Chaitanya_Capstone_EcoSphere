@@ -1,9 +1,10 @@
 ## 🚀 Live Demo
 
 [Click here to view the frontend deployed site](https://client-alpha-beige.vercel.app)
+---
 [Click here to view the deployed server site](https://s65-chaitanya-capstone-ecosphere.onrender.com)
 
-# 🌱 EcoSpera
+# 🌱 EcoSphere
 
 **EcoSpera** is a sustainability-focused platform designed to promote recycling, responsible waste management, and environmentally friendly practices. By educating users and encouraging community collaboration, EcoSpera empowers individuals and communities to contribute to a cleaner, greener planet.
 
