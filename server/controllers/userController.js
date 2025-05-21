@@ -1,10 +1,12 @@
 const User = require('../models/userModel')
+const bcrypt = require('bcrypt')
 
 const getUsers = async (req, res) => {
     try {
         const users = await User.find()
-        if (!users) {
-            return res.status(400).json({message: "No users found!"})
+
+        if (users.length === 0) {
+            return res.status(200).json({message: "No users found!"})
         }
         return res.status(200).json({userDetails: users})
     } catch (err) {
@@ -12,43 +14,73 @@ const getUsers = async (req, res) => {
     }
 }
 
-const addUser = async (req, res) => {
+const signup = async (req, res) => {
     try {
-        const {username, email, password} = req.body
+        const {email, password} = req.body
 
-        if (!username || !email || !password) {
-            return res.status(400).json({message: "All fields are required!"})
+        if (!email) {
+            return res.status(400).json({message: "Please provide an email!"})
         }
+        if (!password) {
+            return res.status(400).json({message: "Please provide a password!"})
+        }
+        if (password.length < 8 || password.length >= 16) {
+            return res.status(400).json({message: "Password length must be in between 8 and 16 characters!"})
+        }
+
+        const existingUser = await User.findOne({email})
+
+        if (existingUser) {
+            return res.status(400).json({message: "User Already Exists!"})
+        }
+
+        const hashedPassword = await bcrypt.hashSync(password, 10)
+
         const newUser = new User({
-            username,
             email,
-            password
+            password: hashedPassword
         })
 
         await newUser.save()
-        return res.status(201).json({message: "User Created Successfully...", userDetails: newUser})
+
+        return res.status(201).json({message: "Signup Successfull..."})
         
     } catch (err) {
         return res.status(500).json({error: err.message})
     }
 }
 
-const updateUser = async (req, res) => {
+const login = async (req, res) => {
     try {
-        const {_id} = req.params
+        const {email, password} = req.body
 
-        const existingUser = await User.findOne({_id})
+        if (!email) {
+            return res.status(400).json({message: "Please provide an email!"})
+        }
+        if (!password) {
+            return res.status(400).json({message: "Please provide a password!"})
+        }
+        if (password.length < 8 || password.length >= 16) {
+            return res.status(400).json({message: "Password length must be in between 8 and 16 characters!"})
+        }
+
+        const existingUser = await User.findOne({email})
 
         if (!existingUser) {
-            return res.status(400).json({message: "Not a valid user!"})
+            return res.status(400).json({message: "User Does Not Exists!"})
         }
         
-        const updatedUser = await User.findByIdAndUpdate(_id, req.body, {new: true})
-        return res.status(200).json({message: "User Updation Successfull...", userDetails: updatedUser})
+        const isMatch = await bcrypt.compare(password, existingUser.password)
 
+        if (!isMatch) {
+            return res.status(400).json({message: "Invalid Credentials!"})
+        }
+
+        return res.status(200).json({message: "Login Successfull..."})
+    
     } catch (err) {
         return res.status(500).json({error: err.message})
     }
 }
 
-module.exports = {getUsers, addUser, updateUser}
+module.exports = {getUsers, login, signup}
