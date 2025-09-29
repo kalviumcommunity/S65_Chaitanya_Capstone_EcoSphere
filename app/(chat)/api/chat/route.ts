@@ -93,11 +93,13 @@ export async function POST(request: Request) {
 
     const userType: UserType = session.user.type;
 
+    // Rate limiting: count user-authored messages in the last 24 hours
     const messageCount = await getMessageCountByUserId({
       id: session.user.id,
       differenceInHours: 24,
     });
 
+    // Enforce per-user cap from entitlements; block when over the limit
     if (messageCount > entitlementsByUserType[userType].maxMessagesPerDay) {
       return new ChatSDKError('rate_limit:chat').toResponse();
     }

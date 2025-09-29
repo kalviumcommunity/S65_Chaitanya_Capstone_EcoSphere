@@ -474,6 +474,7 @@ export async function getMessageCountByUserId({
   differenceInHours,
 }: { id: string; differenceInHours: number }) {
   try {
+    // Rolling window start time for rate limiting
     const twentyFourHoursAgo = new Date(
       Date.now() - differenceInHours * 60 * 60 * 1000,
     );
@@ -484,9 +485,9 @@ export async function getMessageCountByUserId({
       .innerJoin(chat, eq(message.chatId, chat.id))
       .where(
         and(
-          eq(chat.userId, id),
-          gte(message.createdAt, twentyFourHoursAgo),
-          eq(message.role, 'user'),
+          eq(chat.userId, id), // only count this user's messages
+          gte(message.createdAt, twentyFourHoursAgo), // within window
+          eq(message.role, 'user'), // only user-authored messages
         ),
       )
       .execute();
