@@ -19,7 +19,7 @@ export const entitlementsByUserType: Record<UserType, Entitlements> = {
    * For users with an account
    */
   regular: {
-    maxMessagesPerDay: 100,
+    maxMessagesPerDay: 5,
     availableChatModelIds: ['gemini-2.5-flash', 'gemini-2.5-pro'],
   },
 

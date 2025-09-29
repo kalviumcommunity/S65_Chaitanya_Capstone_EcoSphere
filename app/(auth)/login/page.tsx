@@ -108,6 +108,7 @@ export default function Page() {
           
           <button
             type="button"
+            // Triggers 3rd-party OAuth (Google) via NextAuth
             onClick={() => signIn('google', { callbackUrl: '/' })}
             className="flex w-full items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-white bg-[#272725] hover:bg-[#373735] transition-colors duration-300"
           >
