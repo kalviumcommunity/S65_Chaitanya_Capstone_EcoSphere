@@ -35,6 +35,7 @@ export function useChatVisibility({
     return chat.visibility;
   }, [history, chatId, localVisibility]);
 
+  // Update chat entity visibility (client hint + server action)
   const setVisibilityType = (updatedVisibilityType: VisibilityType) => {
     setLocalVisibility(updatedVisibilityType);
     mutate(unstable_serialize(getChatHistoryPaginationKey));

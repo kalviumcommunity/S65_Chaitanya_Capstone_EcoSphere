@@ -80,6 +80,8 @@ export function MessageEditor({
           onClick={async () => {
             setIsSubmitting(true);
 
+            // Update flow: drop all trailing messages after the edited one,
+            // then regenerate assistant response based on the edited message
             await deleteTrailingMessages({
               id: message.id,
             });
