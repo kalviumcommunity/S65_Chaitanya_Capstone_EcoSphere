@@ -15,18 +15,21 @@ CREATE TABLE IF NOT EXISTS "Vote" (
 --> statement-breakpoint
 ALTER TABLE "Chat" ADD COLUMN "title" text NOT NULL;--> statement-breakpoint
 DO $$ BEGIN
+ -- Relationship: Message.chatId → Chat.id (message belongs to a chat)
  ALTER TABLE "Message" ADD CONSTRAINT "Message_chatId_Chat_id_fk" FOREIGN KEY ("chatId") REFERENCES "public"."Chat"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ -- Relationship: Vote.chatId → Chat.id (vote associated with a chat)
  ALTER TABLE "Vote" ADD CONSTRAINT "Vote_chatId_Chat_id_fk" FOREIGN KEY ("chatId") REFERENCES "public"."Chat"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
+ -- Relationship: Vote.messageId → Message.id (vote targets a message)
  ALTER TABLE "Vote" ADD CONSTRAINT "Vote_messageId_Message_id_fk" FOREIGN KEY ("messageId") REFERENCES "public"."Message"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;

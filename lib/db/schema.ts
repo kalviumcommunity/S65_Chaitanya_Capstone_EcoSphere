@@ -25,6 +25,7 @@ export const chat = pgTable('Chat', {
   title: text('title').notNull(),
   userId: uuid('userId')
     .notNull()
+    // Relationship: each Chat belongs to a User (userId → User.id)
     .references(() => user.id),
   visibility: varchar('visibility', { enum: ['public', 'private'] })
     .notNull()
@@ -39,6 +40,7 @@ export const messageDeprecated = pgTable('Message', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   chatId: uuid('chatId')
     .notNull()
+    // Relationship: Message belongs to Chat (chatId → Chat.id)
     .references(() => chat.id),
   role: varchar('role').notNull(),
   content: json('content').notNull(),
@@ -51,6 +53,7 @@ export const message = pgTable('Message_v2', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
   chatId: uuid('chatId')
     .notNull()
+    // Relationship: Message_v2 belongs to Chat (chatId → Chat.id)
     .references(() => chat.id),
   role: varchar('role').notNull(),
   parts: json('parts').notNull(),
@@ -67,9 +70,11 @@ export const voteDeprecated = pgTable(
   {
     chatId: uuid('chatId')
       .notNull()
+      // Relationship: Vote references Chat (chatId → Chat.id)
       .references(() => chat.id),
     messageId: uuid('messageId')
       .notNull()
+      // Relationship: Vote references Message (messageId → Message.id)
       .references(() => messageDeprecated.id),
     isUpvoted: boolean('isUpvoted').notNull(),
   },
@@ -87,9 +92,11 @@ export const vote = pgTable(
   {
     chatId: uuid('chatId')
       .notNull()
+      // Relationship: Vote_v2 references Chat (chatId → Chat.id)
       .references(() => chat.id),
     messageId: uuid('messageId')
       .notNull()
+      // Relationship: Vote_v2 references Message_v2 (messageId → Message_v2.id)
       .references(() => message.id),
     isUpvoted: boolean('isUpvoted').notNull(),
   },
@@ -114,6 +121,7 @@ export const document = pgTable(
       .default('text'),
     userId: uuid('userId')
       .notNull()
+      // Relationship: Document belongs to User (userId → User.id)
       .references(() => user.id),
   },
   (table) => {
@@ -137,11 +145,13 @@ export const suggestion = pgTable(
     isResolved: boolean('isResolved').notNull().default(false),
     userId: uuid('userId')
       .notNull()
+      // Relationship: Suggestion authored by User (userId → User.id)
       .references(() => user.id),
     createdAt: timestamp('createdAt').notNull(),
   },
   (table) => ({
     pk: primaryKey({ columns: [table.id] }),
+    // Relationship: Suggestion targets a Document via composite key (documentId, documentCreatedAt) → (Document.id, Document.createdAt)
     documentRef: foreignKey({
       columns: [table.documentId, table.documentCreatedAt],
       foreignColumns: [document.id, document.createdAt],
@@ -161,6 +171,7 @@ export const stream = pgTable(
   },
   (table) => ({
     pk: primaryKey({ columns: [table.id] }),
+    // Relationship: Stream belongs to Chat (chatId → Chat.id)
     chatRef: foreignKey({
       columns: [table.chatId],
       foreignColumns: [chat.id],
