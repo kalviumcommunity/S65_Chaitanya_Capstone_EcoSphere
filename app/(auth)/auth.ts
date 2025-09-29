@@ -39,6 +39,7 @@ export const {
 } = NextAuth({
   ...authConfig,
   providers: [
+    // 3rd-party OAuth provider: Google (uses GOOGLE_CLIENT_ID/SECRET)
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
@@ -78,14 +79,14 @@ export const {
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // Handle OAuth providers (Google, etc.)
+      // OAuth flow: when provider is Google, ensure user exists in DB
       if (account?.provider === 'google' && user.email) {
         try {
           // Check if user exists
           const existingUsers = await getUser(user.email);
           
           if (existingUsers.length === 0) {
-            // Create new user for OAuth
+            // Provision user for OAuth: create DB record without password
             await createUser(user.email, null); // No password for OAuth users
           }
           
@@ -100,7 +101,7 @@ export const {
     },
     async jwt({ token, user, account }) {
       if (user) {
-        // For OAuth users, get/set user data
+        // Map OAuth (Google) user to DB user id/type on first sign-in
         if (account?.provider === 'google' && user.email) {
           const dbUsers = await getUser(user.email);
           if (dbUsers.length > 0) {
