@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS "Stream" (
 );
 --> statement-breakpoint
 DO $$ BEGIN
+ -- Relationship: Stream.chatId → Chat.id (stream belongs to a chat)
  ALTER TABLE "Stream" ADD CONSTRAINT "Stream_chatId_Chat_id_fk" FOREIGN KEY ("chatId") REFERENCES "public"."Chat"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
