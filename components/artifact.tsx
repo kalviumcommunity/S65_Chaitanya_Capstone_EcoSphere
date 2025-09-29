@@ -124,6 +124,7 @@ function PureArtifact({
   const { mutate } = useSWRConfig();
   const [isContentDirty, setIsContentDirty] = useState(false);
 
+  // Update document entity content via POST to `/api/document`
   const handleContentChange = useCallback(
     (updatedContent: string) => {
       if (!artifact) return;

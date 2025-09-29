@@ -36,6 +36,7 @@ export async function generateTitleFromUserMessage({
 export async function deleteTrailingMessages({ id }: { id: string }) {
   const [message] = await getMessageById({ id });
 
+  // Delete: remove all messages created after the edited one (by timestamp)
   await deleteMessagesByChatIdAfterTimestamp({
     chatId: message.chatId,
     timestamp: message.createdAt,
@@ -49,5 +50,6 @@ export async function updateChatVisibility({
   chatId: string;
   visibility: VisibilityType;
 }) {
+  // Update: persist chat visibility change in the database
   await updateChatVisiblityById({ chatId, visibility });
 }

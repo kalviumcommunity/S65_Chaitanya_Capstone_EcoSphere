@@ -120,6 +120,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
     : false;
 
   const handleDelete = async () => {
+    // Delete chat entity via API route using HTTP DELETE
     const deletePromise = fetch(`/api/chat?id=${deleteId}`, {
       method: 'DELETE',
     });
