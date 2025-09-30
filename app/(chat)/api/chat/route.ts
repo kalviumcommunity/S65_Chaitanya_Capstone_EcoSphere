@@ -40,19 +40,21 @@ import type { VisibilityType } from '@/components/visibility-selector';
 
 export const maxDuration = 60;
 
+// Redis-backed resumable streaming context (optional)
+// If REDIS_URL is configured, streams can be resumed after interruptions
 let globalStreamContext: ResumableStreamContext | null = null;
 
 export function getStreamContext() {
   if (!globalStreamContext) {
     try {
+      // Initialize resumable stream context; requires REDIS_URL
       globalStreamContext = createResumableStreamContext({
         waitUntil: after,
       });
     } catch (error: any) {
       if (error.message.includes('REDIS_URL')) {
-        console.log(
-          ' > Resumable streams are disabled due to missing REDIS_URL',
-        );
+        // Graceful fallback: proceed without resumable streams
+        console.log(' > Resumable streams disabled (missing REDIS_URL)');
       } else {
         console.error(error);
       }
@@ -209,6 +211,7 @@ export async function POST(request: Request) {
       },
     });
 
+    // Use Redis-backed resumable stream if available; otherwise fall back
     const streamContext = getStreamContext();
 
     if (streamContext) {
