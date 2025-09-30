@@ -151,12 +151,14 @@ export async function POST(request: Request) {
     });
 
     const streamId = generateUUID();
-    await createStreamId({ streamId, chatId: id });
+    await createStreamId({ streamId, chatId: id }); 
 
     const stream = createUIMessageStream({
       execute: ({ writer: dataStream }) => {
+        // LLM generation: streamText streams model output tokens incrementally
         const result = streamText({
           model: google(selectedChatModel),
+          // Prompting: system prompt conditions the model for chat behavior
           system: systemPrompt({ selectedChatModel, requestHints }),
           messages: convertToModelMessages(uiMessages),
           stopWhen: stepCountIs(5),
@@ -171,6 +173,7 @@ export async function POST(request: Request) {
                 ],
           experimental_transform: smoothStream({ chunking: 'word' }),
           tools: {
+            // Tool-calling: model can call these functions during generation
             getWeather,
             createDocument: createDocument({ session, dataStream }),
             updateDocument: updateDocument({ session, dataStream }),
@@ -187,6 +190,7 @@ export async function POST(request: Request) {
 
         result.consumeStream();
 
+        // Autocomplete: pipe model stream into UI message stream for live tokens
         dataStream.merge(
           result.toUIMessageStream({
             sendReasoning: true,
