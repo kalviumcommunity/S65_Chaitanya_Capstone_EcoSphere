@@ -11,12 +11,14 @@ import { convertToUIMessages } from '@/lib/utils';
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   const { id } = params;
+  // SSR: fetch chat on the server
   const chat = await getChatById({ id });
 
   if (!chat) {
     notFound();
   }
 
+  // SSR: read session on the server and guard access
   const session = await auth();
 
   if (!session) {
@@ -33,12 +35,14 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     }
   }
 
+  // SSR: fetch initial messages for server-rendered hydration
   const messagesFromDb = await getMessagesByChatId({
     id,
   });
 
   const uiMessages = convertToUIMessages(messagesFromDb);
 
+  // SSR: access cookies for model selection during SSR
   const cookieStore = await cookies();
   const chatModelFromCookie = cookieStore.get('selected-model');
 

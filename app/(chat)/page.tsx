@@ -8,6 +8,7 @@ import { auth } from '../(auth)/auth';
 import { redirect } from 'next/navigation';
 
 export default async function Page() {
+  // SSR: authenticate on the server during initial render
   const session = await auth();
 
   if (!session) {
@@ -16,6 +17,7 @@ export default async function Page() {
 
   const id = generateUUID();
 
+  // SSR: read cookies on the server for initial model selection
   const cookieStore = await cookies();
   const modelIdFromCookie = cookieStore.get('selected-model');
 

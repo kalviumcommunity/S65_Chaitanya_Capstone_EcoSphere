@@ -13,6 +13,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
+  // SSR: parallelize reading auth session and cookies for layout render
   const [session, cookieStore] = await Promise.all([auth(), cookies()]);
   const isCollapsed = cookieStore.get('sidebar:state')?.value !== 'true';
 
