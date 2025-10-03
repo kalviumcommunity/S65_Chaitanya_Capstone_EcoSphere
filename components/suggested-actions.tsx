@@ -20,24 +20,24 @@ function PureSuggestedActions({
 }: SuggestedActionsProps) {
   const suggestedActions = [
     {
-      title: 'What are the advantages',
-      label: 'of using Next.js?',
-      action: 'What are the advantages of using Next.js?',
+      title: 'What are the benefits',
+      label: 'of recycling plastics?',
+      action: 'What are the benefits of recycling plastics?',
     },
     {
-      title: 'Write code to',
-      label: `demonstrate djikstra's algorithm`,
-      action: `Write code to demonstrate djikstra's algorithm`,
+      title: 'How to set up a',
+      label: 'home composting system',
+      action: 'How to set up a home composting system',
     },
     {
-      title: 'Help me write an essay',
-      label: `about silicon valley`,
-      action: `Help me write an essay about silicon valley`,
+      title: 'Help me plan a',
+      label: 'community cleanup event',
+      action: 'Help me plan a community cleanup event',
     },
     {
-      title: 'What is the weather',
-      label: 'in San Francisco?',
-      action: 'What is the weather in San Francisco?',
+      title: 'What are sustainable',
+      label: 'alternatives to single-use plastics?',
+      action: 'What are sustainable alternatives to single-use plastics?',
     },
   ];
 
